@@ -1,35 +1,34 @@
-async function generateMedia(mode) {
-    const prompt = document.getElementById("prompt").value;
-    const resultBox = document.getElementById("result");
+async function generateMedia(type) {
+  const prompt = document.getElementById("prompt").value;
+  const resultDiv = document.getElementById("result");
 
-    resultBox.innerHTML = "⏳ Generating " + mode + "...";
+  resultDiv.innerHTML = "⏳ Generating...";
 
-    try {
-        const res = await fetch("/api/generate", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ prompt, mode })
-        });
+  try {
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: prompt,
+        type: type   // <-- IMPORTANT (image or video)
+      })
+    });
 
-        const data = await res.json();
+    const data = await response.json();
 
-        if (!res.ok) {
-            resultBox.innerHTML = "❌ Error: " + data.error;
-            return;
-        }
-
-        if (data.type === "image") {
-            resultBox.innerHTML = `<img src="${data.url}" width="300"/>`;
-        }
-
-        if (data.type === "video") {
-            resultBox.innerHTML = `<video width="300" controls><source src="${data.url}" type="video/mp4"></video>`;
-        }
-
-    } catch (err) {
-        resultBox.innerHTML = "❌ Request failed: " + err.message;
+    if (!data.success) {
+      resultDiv.innerHTML = "❌ Error: " + data.error;
+      return;
     }
+
+    // Image or video display
+    if (type === "image") {
+      resultDiv.innerHTML = `<img src="${data.output}" style="max-width:100%;">`;
+    } else {
+      resultDiv.innerHTML = `<video src="${data.output}" controls style="max-width:100%;"></video>`;
+    }
+
+  } catch (error) {
+    resultDiv.innerHTML = "❌ Request failed: " + error.message;
+  }
 }
-
-
-
