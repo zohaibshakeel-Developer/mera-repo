@@ -18,22 +18,25 @@ app.post("/api/generate", async (req, res) => {
   try {
     const { prompt, type } = req.body;
 
+    if (!prompt || !type) {
+      return res.status(400).json({ error: "Missing prompt or type" });
+    }
+
     let model = "";
     let input = {};
 
-    // FREE IMAGE MODEL
+    // ---------------- IMAGE MODEL ---------------- //
     if (type === "image") {
-      model = "stability-ai/sdxl";
+      model = "black-forest-labs/flux-schnell:0.1.0";
       input = { prompt };
     }
 
-    // FREE VIDEO MODEL
+    // ---------------- VIDEO MODEL ---------------- //
     if (type === "video") {
-      model = "cmu-facediffusion/svd";
+      model = "stability-ai/stable-video-diffusion-img2vid-xt:latest";
       input = {
         prompt,
-        num_frames: 20,
-        fps: 8
+        num_frames: 25
       };
     }
 
@@ -42,12 +45,12 @@ app.post("/api/generate", async (req, res) => {
     res.json({ success: true, output });
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({
       success: false,
-      error: err.message
+      error: err.message,
     });
   }
 });
 
-app.listen(3000, () => console.log("🔥 Server running on port 3000"));
 export default app;
