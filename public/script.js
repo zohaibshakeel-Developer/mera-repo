@@ -1,17 +1,20 @@
-document.getElementById("generateBtn").addEventListener("click", async () => {
+async function generate() {
   const prompt = document.getElementById("prompt").value;
-  const outputImg = document.getElementById("outputImg");
-  outputImg.src = "";
+  document.getElementById("output").innerHTML = "⏳ Generating...";
 
   const res = await fetch("/api/generate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
+    body: JSON.stringify({ prompt }),
   });
 
   const data = await res.json();
 
   if (data.image) {
-    outputImg.src = data.image;
+    document.getElementById("output").innerHTML = `
+      <img src="${data.image}" style="max-width:400px;border-radius:10px;" />
+    `;
+  } else {
+    document.getElementById("output").innerHTML = "❌ Error generating image";
   }
-});
+}
