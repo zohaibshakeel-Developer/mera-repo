@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "routes": [
+    { "src": "/api/generate", "dest": "/api/generate.js" },
+    { "src": "/(.*)", "dest": "/public/$1" }
+  ]
+}
