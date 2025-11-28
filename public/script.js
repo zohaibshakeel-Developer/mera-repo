@@ -1,34 +1,32 @@
 async function generateMedia(type) {
   const prompt = document.getElementById("prompt").value;
-  const resultDiv = document.getElementById("result");
+  const result = document.getElementById("result");
 
-  resultDiv.innerHTML = "⏳ Generating...";
+  result.innerHTML = "⏳ Generating...";
 
   try {
-    const response = await fetch("/api/generate", {
+    const res = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: prompt,
-        type: type   // <-- IMPORTANT (image or video)
-      })
+      body: JSON.stringify({ prompt, type })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
     if (!data.success) {
-      resultDiv.innerHTML = "❌ Error: " + data.error;
+      result.innerHTML = "❌ Error: " + data.error;
       return;
     }
 
-    // Image or video display
     if (type === "image") {
-      resultDiv.innerHTML = `<img src="${data.output}" style="max-width:100%;">`;
-    } else {
-      resultDiv.innerHTML = `<video src="${data.output}" controls style="max-width:100%;"></video>`;
+      result.innerHTML = `<img src="${data.output[0]}" width="400">`;
     }
 
-  } catch (error) {
-    resultDiv.innerHTML = "❌ Request failed: " + error.message;
+    if (type === "video") {
+      result.innerHTML = `<video src="${data.output}" width="400" controls></video>`;
+    }
+
+  } catch (err) {
+    result.innerHTML = "❌ Request failed: " + err.message;
   }
 }
