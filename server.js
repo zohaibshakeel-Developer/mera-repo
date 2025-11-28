@@ -22,13 +22,18 @@ app.post("/api/generate", async (req, res) => {
     let input = {};
 
     if (type === "image") {
-      model = "stability-ai/stable-diffusion-xl-base-1.0";
-      input = { prompt };
+      model = "black-forest-labs/flux-schnell";
+      input = {
+        prompt: prompt,
+      };
     }
 
     if (type === "video") {
-      model = "zunxbt/zeroscope-v2-xl";
-      input = { prompt };
+      model = "tencent/hunyuan-video";
+      input = {
+        prompt: prompt,
+        aspect_ratio: "16:9"
+      };
     }
 
     const output = await replicate.run(model, { input });
@@ -44,3 +49,4 @@ app.post("/api/generate", async (req, res) => {
 });
 
 export default app;
+
