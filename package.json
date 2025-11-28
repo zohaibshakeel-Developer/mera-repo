@@ -1,8 +1,8 @@
 {
-  "name": "ai-backend",
+  "name": "image-ai",
   "version": "1.0.0",
-  "type": "module",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node server.js"
   },
@@ -10,6 +10,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "replicate": "^0.29.0"
+    "replicate": "^0.30.0"
   }
 }
