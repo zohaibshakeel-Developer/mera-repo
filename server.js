@@ -18,12 +18,12 @@ app.post("/api/generate", async (req, res) => {
     const { prompt } = req.body;
 
     const output = await replicate.run(
-      "black-forest-labs/flux-schnell",
+      "black-forest-labs/flux-schnell:62294d7c-0f3e-49f1-ae0d-235ca7e6c52b",
       {
         input: {
-          prompt: prompt,
+          prompt,
           width: 512,
-          height: 512
+          height: 512,
         }
       }
     );
