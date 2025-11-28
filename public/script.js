@@ -1,15 +1,32 @@
 async function generate() {
     const prompt = document.getElementById("prompt").value;
+    const resultBox = document.getElementById("result");
 
-    const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ prompt })
-    });
+    resultBox.innerHTML = "⏳ Generating...";
 
-    const data = await res.json();
+    try {
+        const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ prompt })
+        });
 
-    document.getElementById("result").innerHTML =
-        `<img src="${data.image}" width="300">`;
+        const data = await res.json();
+
+        if (!res.ok) {
+            resultBox.innerHTML = "❌ Error: " + data.error;
+            return;
+        }
+
+        if (data.image) {
+            resultBox.innerHTML = `<img src="${data.image}" width="300" alt="AI Image"/>`;
+        } else {
+            resultBox.innerHTML = "❌ No image returned!";
+        }
+
+    } catch (err) {
+        resultBox.innerHTML = "❌ Request failed: " + err.message;
+    }
 }
+
 
