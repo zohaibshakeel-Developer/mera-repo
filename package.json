@@ -1,0 +1,9 @@
+{
+  "name": "zohaib-ai-studio",
+  "version": "1.0.0",
+  "main": "api/generate.js",
+  "type": "module",
+  "dependencies": {
+    "replicate": "latest"
+  }
+}
