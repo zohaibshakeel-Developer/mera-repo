@@ -21,18 +21,19 @@ app.post("/api/generate", async (req, res) => {
     let model = "";
     let input = {};
 
+    // FREE IMAGE MODEL
     if (type === "image") {
-      model = "black-forest-labs/flux-schnell";
-      input = {
-        prompt: prompt,
-      };
+      model = "stability-ai/sdxl";
+      input = { prompt };
     }
 
+    // FREE VIDEO MODEL
     if (type === "video") {
-      model = "tencent/hunyuan-video";
+      model = "cmu-facediffusion/svd";
       input = {
-        prompt: prompt,
-        aspect_ratio: "16:9"
+        prompt,
+        num_frames: 20,
+        fps: 8
       };
     }
 
@@ -43,10 +44,10 @@ app.post("/api/generate", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: err.message,
+      error: err.message
     });
   }
 });
 
+app.listen(3000, () => console.log("🔥 Server running on port 3000"));
 export default app;
-
