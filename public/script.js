@@ -1,32 +1,33 @@
-async function generateMedia(type) {
+async function generate(type) {
   const prompt = document.getElementById("prompt").value;
-  const result = document.getElementById("result");
-
-  result.innerHTML = "⏳ Generating...";
+  const resultBox = document.getElementById("result");
+  resultBox.innerHTML = "⏳ Generating...";
 
   try {
     const res = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, type })
+      body: JSON.stringify({ prompt, type }),
     });
 
     const data = await res.json();
 
     if (!data.success) {
-      result.innerHTML = "❌ Error: " + data.error;
+      resultBox.innerHTML = "❌ Error: " + data.error;
       return;
     }
 
+    // Image result
     if (type === "image") {
-      result.innerHTML = `<img src="${data.output[0]}" width="400">`;
+      resultBox.innerHTML = `<img src="${data.output}" style="max-width:300px;">`;
     }
 
+    // Video result
     if (type === "video") {
-      result.innerHTML = `<video src="${data.output}" width="400" controls></video>`;
+      resultBox.innerHTML = `<video controls width="350"><source src="${data.output}" /></video>`;
     }
 
-  } catch (err) {
-    result.innerHTML = "❌ Request failed: " + err.message;
+  } catch (e) {
+    resultBox.innerHTML = "❌ " + e.message;
   }
 }
