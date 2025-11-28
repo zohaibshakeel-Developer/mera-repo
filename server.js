@@ -1,39 +1,38 @@
-import express from "express";
-import cors from "cors";
-import Replicate from "replicate";
-import dotenv from "dotenv";
-
-dotenv.config();
-
+require("dotenv").config();
+const express = require("express");
+const Replicate = require("replicate");
+const cors = require("cors");
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
+  auth: process.env.REPLICATE_API_KEY,
 });
 
+// IMAGE GENERATE API
 app.post("/api/generate", async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const prompt = req.body.prompt;
 
     const output = await replicate.run(
-      "black-forest-labs/flux-schnell:62294d7c-0f3e-49f1-ae0d-235ca7e6c52b",
+      "black-forest-labs/flux-pro:8ddc3e13ba97539e67ad97742d32df8a84e673de0bd5b79f6a37b319a5aa181e",
       {
         input: {
           prompt,
-          width: 512,
-          height: 512,
-        }
+          steps: 30,
+          guidance: 3,
+        },
       }
     );
 
     res.json({ image: output[0] });
-
-  } catch (error) {
-    console.error("❌ Error:", error);
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error("❌ ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
-app.listen(3000, () => console.log("🔥 Server running on port 3000"));
+app.listen(3000, () => console.log("Server running on 3000"));
